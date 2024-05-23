@@ -10,6 +10,12 @@
     <title>Document Search</title>
 
     <style>
+
+        .navbar
+        {
+            background-color: #D71E28;
+            border-bottom: 2px solid #FFCD41;
+        }
         #title
         {
             font-family: "Libre Baskerville", "serif";
@@ -17,6 +23,7 @@
             font-size: 25px;
             font-style: normal;
             margin-left: 20px;
+            color: white;
         }
 
         #navElements
@@ -93,8 +100,8 @@
         #searchButton:hover
         {
             background-color: white;
-            color: #0069D9;
-            border: 3px solid #0069D9;
+            color: #B31E30;
+            border: 3px solid #B31E30;
         }
 
         .content span, .references span{
@@ -110,7 +117,7 @@
             font-size: 17px;
             border: 3px double rgb(82, 82, 82);
             border-radius: 10px;
-            background-color: rgb(248, 236, 236);
+            background-color: #F4F0ED;
             overflow-y: scroll;
             font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
@@ -127,10 +134,10 @@
     
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar">
     <a class="navbar-brand" href="#">
         <div id="navElements">
-            <div>     
+            <div style="border: 2px solid #FFCD41;">     
                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wells_Fargo_Bank.svg" width="50" height="50" class="d-inline-block align-top" alt="">
             </div>
             <div id="title">10K DOCUMENT SEARCH AGENT</div>
@@ -149,7 +156,7 @@
                         }" autocomplete="off">
                             <input type="text" name="searchQuery" id="search" placeholder="Enter the query..." value=''>
                             <br>
-                            <button type="submit" class="btn btn-primary" id="searchButton">Search</button>
+                            <button type="submit" class="btn btn-danger" id="searchButton">Search</button>
                         </form>
                     </center>
                 </div>
