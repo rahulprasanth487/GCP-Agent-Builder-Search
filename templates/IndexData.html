@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+    <title>Document Search</title>
+
+    <style>
+        #title
+        {
+            font-family: "Libre Baskerville", "serif";
+            font-weight: 700;
+            font-size: 25px;
+            font-style: normal;
+            margin-left: 20px;
+        }
+
+        #navElements
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+
+        }
+
+        .mainContainer
+        {
+            height:635px;
+        }
+
+        .containers
+        {
+            width: 99.6%;
+            height: 100%;
+            padding-right: 10px;
+        }
+
+        .b
+        {
+            height: 100%;
+        }
+        .b .leftWindow
+        {
+            width: 50%;
+            height: 100%;
+        }
+
+        .b .references
+        {
+            width: 50%;
+            height: 100%;
+            border-left:2px solid rgb(169, 169, 169) ;
+        }
+
+        .b .search
+        {
+            height: 20%;
+            border-bottom: 2px solid rgb(169, 169, 169);
+        }
+
+        .b .content
+        {
+            height: 80%;
+            padding: 15px;
+            padding-left: 30px;
+        }
+
+
+        #search
+        {
+            background-color: rgb(220, 220, 220);
+            border: 3px solid rgb(142, 142, 142);
+            font-size: 18px;
+            font-style: oblique;
+            width: 90%;
+            padding: 5px;
+            border-radius: 30px;
+            padding-left: 15px;
+            margin-top: 20px;
+        }
+
+        #searchButton
+        {
+            margin-top: 12px;
+        }
+
+        #searchButton:hover
+        {
+            background-color: white;
+            color: #0069D9;
+            border: 3px solid #0069D9;
+        }
+
+        .content span, .references span{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .generatedResponse
+        {
+            height: 75%;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 17px;
+            border: 3px double rgb(82, 82, 82);
+            border-radius: 10px;
+            background-color: rgb(248, 236, 236);
+            overflow-y: scroll;
+            overflow-wrap: break-word;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        .references
+        {
+            padding: 20px;
+        }
+
+        .hr1 {
+            border: 1px dashed gray;
+        }
+        .hr2 {
+            border: 1px solid gray;
+        }
+
+        .referencesContainer
+        {
+            height: 90%;
+            overflow-y: scroll;
+            overflow-wrap: break-word;
+            /* border: 1px solid rgb(6, 6, 6); */
+        }
+
+        .refPanel
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 95%;
+        }
+
+        .refPanel .refContent
+        {
+            background-color: rgb(255, 255, 255);
+            border: 2px solid rgb(150, 150, 150);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .refPanel .refContent:hover
+        {
+            background-color:floralwhite;
+        }
+
+        .rank
+        {
+            color: rgb(0, 0, 0);
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 50px;
+        }
+    </style>
+    
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <div id="navElements">
+            <div>     
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wells_Fargo_Bank.svg" width="50" height="50" class="d-inline-block align-top" alt="">
+            </div>
+            <div id="title">10K DOCUMENT SEARCH AGENT</div>
+        </div>
+    </a>
+  </nav>
+
+  <div class="mainContainer">
+    <div class="containers">
+        <div class="row b">
+            <div class="column leftWindow">
+                <div class="search">
+                    <center>
+                        <form action="{{ url_for('handlePost') }}" method="post" onkeydown="if(event.keyCode === 13) {
+                            return false;
+                        }" autocomplete="off">
+                            <input type="text" name="searchQuery" id="search" placeholder="Enter the query..." value='{{ query | escape }}'>
+                            <br>
+                            <button type="submit" class="btn btn-primary" id="searchButton">Search</button>
+                        </form>
+                    </center>
+                </div>
+                <div class="content">
+                    <span>GENERATED RESPONSE:</span>
+                    <div class="generatedResponse">
+                        {% if data and data.summary and data.summary.summaryText %}
+                            <p>{{ data.summary.summaryText | safe }}</p>
+                        {% else %}
+                            <p>No data is available.</p>
+                            <br>
+                            <b>{{error}}</b>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="references">
+                <span>GROUNDING REFERENCES</span>
+
+                    <hr class="hr1">
+                    {%if data and data.results%}
+                        <div class="referencesContainer">
+                            {% for ref in data.results %}
+                            <div class="refPanel">
+                                <div class="rank">
+                                    <b>{{ loop.index }}</b>
+                                </div>
+                                <div class="refContent">
+                                    <b>Title : </b>{{ref.document.derivedStructData.title}}
+                                    <br>
+                                    <b>Bucket Link : </b>{{ref.document.derivedStructData.link}}
+                                    <br>
+                                    <b>Page Number : </b>{{ref.document.derivedStructData.extractive_answers.0.pageNumber}}
+                                    <br>
+                                    <b>Extractive Content : </b>{{ref.document.derivedStructData.extractive_answers.0.content}}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {%else%}
+                        <b>{{error}}</b>
+                    {%endif%}
+
+            </div>
+        </div>
+    </div>
+  </div>
+    
+</body>
+</html>
